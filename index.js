@@ -15,10 +15,7 @@ var computer = 3;
 
 console.log(colorize(computer,'Hello world!'));
 
-function print(msg){
-	console.log("this is a test");
-}
- 
+displayBoard();
 while(!winner){
 
     //check game's phase
@@ -28,14 +25,11 @@ while(!winner){
         info(computer,"Ok! Let's switch to Move Phase!");
     }
 
-    play(currentPlayer, phase);   
-    
+    play(currentPlayer, phase);      
+    winner = checkWinner();
     currentPlayer = (currentPlayer+1)%2;
     nbTurns++;
-
-    winner = checkWinner();
     displayBoard();
-
 }
 
 function play(player, phase){
