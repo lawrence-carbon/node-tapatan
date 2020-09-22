@@ -4,6 +4,7 @@
  */
 
 const chalk = require('chalk');
+const Font = require('ascii-art-font');
 var readline = require('readline-sync');
 
 var winner = false;
@@ -13,24 +14,28 @@ var board = [-1,-1,-1,-1,-1,-1,-1,-1,-1]; // init the board with no pawns
 var nbTurns = 0;
 var computer = 3; 
 
-console.log(colorize(computer,'Hello world!'));
 
-displayBoard();
-while(!winner){
 
-    //check game's phase
-    if(nbTurns > 5) phase=1;
-    if(nbTurns == 6){
-        phase=1;
-        info(computer,"Ok! Let's switch to Move Phase!");
-    }
+Font.create('Welcome  to Tapatan', 'Doom', function(err,rendered){
+    console.log(colorize(computer,rendered));
 
-    play(currentPlayer, phase);      
-    winner = checkWinner();
-    currentPlayer = (currentPlayer+1)%2;
-    nbTurns++;
     displayBoard();
-}
+    while(!winner){
+
+        //check game's phase
+        if(nbTurns > 5) phase=1;
+        if(nbTurns == 6){
+            phase=1;
+            info(computer,"Ok! Let's switch to Move Phase!");
+        }
+
+        play(currentPlayer, phase);      
+        winner = checkWinner();
+        currentPlayer = (currentPlayer+1)%2;
+        nbTurns++;
+        displayBoard();
+    }
+});
 
 function play(player, phase){
 

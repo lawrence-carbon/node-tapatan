@@ -5,7 +5,8 @@
   "main": "index.js",
   "dependencies": {
     "chalk": "~4.1.0",
-    "readline-sync": "^1.4.10"
+    "readline-sync": "^1.4.10",
+    "ascii-art-font": "1.0.2"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
