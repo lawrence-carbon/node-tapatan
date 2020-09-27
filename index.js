@@ -3,7 +3,7 @@
  * 
  */
 
-const DEBUG = false; // enable debug logging in the console
+const DEBUG = true; // enable debug logging in the console
 const chalk = require('chalk');
 const Font = require('ascii-art-font');
 var readline = require('readline-sync');
@@ -19,9 +19,17 @@ var computer = 3;
 
 Font.create('Welcome  to Tapatan', 'Doom', function(err,rendered){
     console.log(colorize(computer,rendered));
-    mainGameLoop();
+    hackGame();
+    mainGameLoop();    
 });
 
+function hackGame(){
+    if(DEBUG){
+        board = [0,0,1,1,1,0,-1,-1,-1];
+        phase = 1;
+        nbTurns = 6;
+    }
+}
 function mainGameLoop(){
     while(!winner){
         
@@ -81,7 +89,7 @@ function play(player, phase){
         } else {
             // moving phase : a1:a2
             var m = decodeMove(move);
-            if( m <= -1){
+            if( m[0] < 0 || m[1] < 0){
                 error("Unexpected move format("+ move +"). Waiting for b3:b2");
                 valid = false;
             } else {
@@ -104,11 +112,16 @@ function play(player, phase){
 function decodeMove(move){
 
     // moving phase : a1:a2
-    if(typeof move != 'string' || move.length != 5) return -1;
-    before = decodePawn(move.substring(0,1));
-    after = decodePawn(move.substring(3,4));
-    if( before <= -1 ||  after <= -1 ) return -1;
-
+    if(typeof move != 'string' || move.length != 5){ 
+        debug("bad input");
+        return [-1,-1];
+    }
+    b = move.substring(0,2);
+    before = decodePawn(b);
+    a = move.substring(3,5);
+    after = decodePawn(a);
+    //if( before <= -1 ||  after <= -1 ) return [-1,-1]; // unreadble move, return dummy move
+    debug("[" + b + ","+ a +"] --> [" + before + ","+after+"]")
     return [before , after];
 }
 
