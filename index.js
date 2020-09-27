@@ -3,6 +3,7 @@
  * 
  */
 
+const DEBUG = false; // enable debug logging in the console
 const chalk = require('chalk');
 const Font = require('ascii-art-font');
 var readline = require('readline-sync');
@@ -18,9 +19,13 @@ var computer = 3;
 
 Font.create('Welcome  to Tapatan', 'Doom', function(err,rendered){
     console.log(colorize(computer,rendered));
+    mainGameLoop();
+});
 
-    displayBoard();
+function mainGameLoop(){
     while(!winner){
+        
+        displayBoard();
 
         //check game's phase
         if(nbTurns > 5) phase=1;
@@ -31,11 +36,20 @@ Font.create('Welcome  to Tapatan', 'Doom', function(err,rendered){
 
         play(currentPlayer, phase);      
         winner = checkWinner();
-        currentPlayer = (currentPlayer+1)%2;
+        if(! winner){
+          currentPlayer = (currentPlayer+1)%2;        
+        }
         nbTurns++;
-        displayBoard();
     }
-});
+
+    displayWinner(currentPlayer)
+    
+}
+function displayWinner(winnerPlayer){
+
+    info(winnerPlayer,"Player " + (winnerPlayer+1) + " wins !!");
+    displayBoard();
+}
 
 function play(player, phase){
 
@@ -123,11 +137,34 @@ function decodePawn(pawnCoord){
 }
 
 function checkWinner(){
+    
+    // each position on the grid has a score. The score is 2^index_of_position
+    var currentPlayerCumulatedSum = 0; // sum scores of each positionned pawn for the current player
+    var winingSums =  [7,56,73,84,146,273,292,448]; // there are only 8 3 in-a-row way to win, these are the summed scores of each of these wining placements
+
+    for(i = 0 ; i < board.length ; i++){
+        if(board[i] == currentPlayer){
+            currentPlayerCumulatedSum += Math.pow(2,i);
+        }
+    }
+    debug("cum sum for player " + currentPlayer + ": " + currentPlayerCumulatedSum);
+    
+    for(j = 0 ; j < winingSums.length ; j++){
+        if(winingSums[j] == currentPlayerCumulatedSum){
+            // we got a winner !
+            return true;
+        }
+    }
+
     return false;
 }
 
 function error(msg){
     console.log(colorize(-1,msg));
+}
+
+function debug(msg){
+    if(DEBUG) console.log(colorize(-2,msg));
 }
 
 function info(player, msg){
@@ -138,6 +175,8 @@ function colorize(player,msg){
     var coloredMsg = msg;
     if(player==0){
         coloredMsg = chalk.blue(msg);
+    } else if(player==-2) {
+        coloredMsg = chalk.redBright(msg);
     } else if(player==1) {
         coloredMsg = chalk.green(msg);
     } else if(player== -1) {
