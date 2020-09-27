@@ -25,7 +25,7 @@ Font.create('Welcome  to Tapatan', 'Doom', function(err,rendered){
 
 function hackGame(){
     if(DEBUG){
-        board = [0,0,1,1,1,0,-1,-1,-1];
+        board = [0,0,-1,1,1,0,1,-1,-1];
         phase = 1;
         nbTurns = 6;
     }
@@ -55,8 +55,10 @@ function mainGameLoop(){
 }
 function displayWinner(winnerPlayer){
 
-    info(winnerPlayer,"Player " + (winnerPlayer+1) + " wins !!");
-    displayBoard();
+    Font.create("Player " + (winnerPlayer+1) + " wins !!", 'Doom', function(err,rendered){
+        console.log(colorize(computer,rendered));
+        displayBoard();    
+    });    
 }
 
 function play(player, phase){
