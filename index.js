@@ -3,7 +3,7 @@
  * 
  */
 
-const DEBUG = true; // enable debug logging in the console
+const DEBUG = false; // enable debug logging in the console
 const chalk = require('chalk');
 const Font = require('ascii-art-font');
 var readline = require('readline-sync');
@@ -128,6 +128,7 @@ function decodeMove(move){
 function decodePawn(pawnCoord){
     if(typeof pawnCoord != 'string' || pawnCoord.length != 2) return -1;
     
+    pawnCoord = pawnCoord.toLowerCase(); // take down caps
     var column = pawnCoord.substring(0,1);
     if( column != 'a' && column != 'b' && column != 'c' ) return -1;
     var c = -1;
